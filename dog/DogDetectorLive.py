@@ -4,12 +4,13 @@ from ultralytics import YOLO
 from colorama import Fore, Style
 
 class LostMemeberDetector:
-    def __init__(self, yolo_dog_model='best.pt', yolo_human_model='yolo12n.pt'):
+    def __init__(self, human=False, yolo_dog_model='best.pt', yolo_human_model='yolo12n.pt'):
         self.cap = cv2.VideoCapture(0)
         self.yolo_dog = YOLO(yolo_dog_model)
         self.yolo_human = YOLO(yolo_human_model)
         self.detected_classes = set()
         self.class_colours = {}
+        self.human = human
 
     def generate_rand_col(self, class_name):
         """Generate a unique color for each class if not already assigned."""
@@ -27,47 +28,48 @@ class LostMemeberDetector:
             return None
 
         detections = []
+        if self.human:
+            # Process frame with human model (only keep 'person' class)
+            human_results = self.yolo_human(img)
+            for result in human_results:
+                for box in result.boxes:
+                    class_id = int(box.cls)
+                    class_name = result.names[class_id]
+                    confidence = box.conf[0].item()  # Confidence score
 
-        # Process frame with human model (only keep 'person' class)
-        human_results = self.yolo_human(img)
-        for result in human_results:
-            for box in result.boxes:
-                class_id = int(box.cls)
-                class_name = result.names[class_id]
-                confidence = box.conf[0].item()  # Confidence score
+                    if class_name.lower() == 'person':  # Only draw 'person'
+                        colour = self.generate_rand_col(class_name)
+                        x1, y1, x2, y2 = map(int, box.xyxy[0])
+                        detections.append((class_name, confidence, x1, y1, x2, y2, colour))
 
-                if class_name.lower() == 'person':  # Only draw 'person'
-                    colour = self.generate_rand_col(class_name)
-                    x1, y1, x2, y2 = map(int, box.xyxy[0])
-                    detections.append((class_name, confidence, x1, y1, x2, y2, colour))
+        else:
+            highest_conf_breed = None
+            highest_conf = 0
 
-        # Process frame with dog model (keep only highest-confidence class)
-        highest_conf_breed = None
-        highest_conf = 0
+            dog_results = self.yolo_dog(img)
+            for result in dog_results:
+                for box in result.boxes:
+                    class_id = int(box.cls)
+                    class_name = result.names[class_id]
+                    confidence = box.conf[0].item()
 
-        dog_results = self.yolo_dog(img)
-        for result in dog_results:
-            for box in result.boxes:
-                class_id = int(box.cls)
-                class_name = result.names[class_id]
-                confidence = box.conf[0].item()
+                    if confidence > highest_conf:
+                        highest_conf = confidence
+                        highest_conf_breed = (class_name, confidence, box.xyxy[0])
 
-                if confidence > highest_conf:
-                    highest_conf = confidence
-                    highest_conf_breed = (class_name, confidence, box.xyxy[0])
-
-        # Add the highest-confidence dog breed to detections
-        if highest_conf_breed:
-            class_name, confidence, box_coords = highest_conf_breed
-            colour = self.generate_rand_col(class_name)
-            x1, y1, x2, y2 = map(int, box_coords)
-            detections.append((class_name, confidence, x1, y1, x2, y2, colour))
+            # Add the highest-confidence dog breed to detections
+            if highest_conf_breed:
+                class_name, confidence, box_coords = highest_conf_breed
+                colour = self.generate_rand_col(class_name)
+                x1, y1, x2, y2 = map(int, box_coords)
+                detections.append((class_name, confidence, x1, y1, x2, y2, colour))
 
         # Draw all detections
         for class_name, confidence, x1, y1, x2, y2, colour in detections:
-            cv2.rectangle(img, (x1, y1), (x2, y2), colour, 2)
-            label = f"{class_name} {confidence:.2f}"
-            cv2.putText(img, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, colour, 2)
+            if confidence > 0.6:
+                cv2.rectangle(img, (x1, y1), (x2, y2), colour, 2)
+                label = f"{class_name} {confidence:.2f}"
+                cv2.putText(img, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, colour, 2)
 
         return img
 
@@ -77,9 +79,9 @@ class LostMemeberDetector:
             if img is None:
                 break
 
-            cv2.imshow('Dog Detection Live', img)
+            cv2.imshow('Detection Live', img)
 
-            if cv2.waitKey(1) & (cv2.getWindowProperty('Dog Detection Live', cv2.WND_PROP_VISIBLE) < 1):
+            if cv2.waitKey(1) & (cv2.getWindowProperty('Detection Live', cv2.WND_PROP_VISIBLE) < 1):
                 break
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
@@ -89,5 +91,5 @@ class LostMemeberDetector:
 
 # Example usage when running this file directly
 if __name__ == "__main__":
-    detector = LostMemeberDetector()
+    detector = LostMemeberDetector(human=False)
     detector.run()
