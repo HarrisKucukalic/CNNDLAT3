@@ -4,6 +4,10 @@ import pickle
 import face_recognition
 import numpy as np
 import cvzone
+import dlib
+
+
+
 from YOLOv12 import LostMemeberDetector
 import tkinter as tk
 from PIL import Image, ImageTk
@@ -11,13 +15,13 @@ from PIL import Image, ImageTk
 
 cap = cv2.VideoCapture(0)
 
-imgBackground = cv2.imread('Resources/backgroud.png')
-# import modes
-modes_folder = 'Resources/Modes'
-mode_path_list = os.listdir(modes_folder)
-mode_list = []
-for path in mode_path_list:
-    mode_list.append(cv2.imread(os.path.join(modes_folder, path)))
+# imgBackground = cv2.imread('Resources/backgroud.png')
+# # import modes
+# modes_folder = 'Resources/Modes'
+# mode_path_list = os.listdir(modes_folder)
+# mode_list = []
+# for path in mode_path_list:
+#     mode_list.append(cv2.imread(os.path.join(modes_folder, path)))
 
 # load encoded faces
 print("Loading encoded faces ...")
@@ -31,16 +35,14 @@ print("Encoded faces loaded")
 
 while True:
     success, img = cap.read()
+    if not success:
+        break
 
-    img = cv2.resize(img, (800, 550))
-    img_s = cv2.resize(img, (0, 0), None, 0.25, 0.25)
+    img_s = cv2.resize(img, (0, 0), fx=0.25, fy=0.25)
     img_s = cv2.cvtColor(img_s, cv2.COLOR_BGR2RGB)
 
     face_curr = face_recognition.face_locations(img_s)
     encode_curr = face_recognition.face_encodings(img_s, face_curr)
-
-    imgBackground[300:300 + 550, 70:70 + 800] = img
-    imgBackground[400:400 + mode_list[1].shape[0], 1050:1050 + mode_list[1].shape[1]] = mode_list[1]
 
     for encoded_face, face_loc in zip(encode_curr, face_curr):
         matches = face_recognition.compare_faces(encoded_list_known, encoded_face)
@@ -48,19 +50,18 @@ while True:
 
         match_index = np.argmin(face_dist)
         if matches[match_index]:
-            # print("Detected!")
-            # print(ids[match_index])
             y1, x2, y2, x1 = face_loc
-            y1, x2, y2, x1 = y1 * 4, x2 * 4, y2 * 4, x1 * 4
-            bbox = 70+x1, 300+y1, x2-x1, y2-y1
-            imgBackground = cvzone.cornerRect(imgBackground, bbox, rt=0)
-            imgBackground[400:400 + mode_list[0].shape[0], 1050:1050 + mode_list[0].shape[1]] = mode_list[0]
-            print(ids[match_index])
+            y1, x2, y2, x1 = [v * 4 for v in (y1, x2, y2, x1)]
 
-    cv2.imshow("Drone & Rescue", imgBackground)
-    cv2.waitKey(1)
+            # Draw bounding box
+            bbox = (x1, y1), (x2, y2)
+            cv2.rectangle(img, bbox[0], bbox[1], (0, 255, 0), 1)
+            cv2.putText(img, ids[match_index], (x1, y1 - 10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
 
-    if cv2.waitKey(1) & (cv2.getWindowProperty("Drone & Rescue", cv2.WND_PROP_VISIBLE) < 1):
+    cv2.imshow("Face Detection", img)
+
+    if cv2.waitKey(1) & (cv2.getWindowProperty("Face Detection", cv2.WND_PROP_VISIBLE) < 1):
         break
 
 

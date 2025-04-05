@@ -97,5 +97,5 @@ if __name__ == "__main__":
     print("CUDA Available:", torch.cuda.is_available())
     print("CUDA Device:", torch.cuda.get_device_name(0))
     print("Settings")
-    detector = LostMemeberDetector(human=False)
+    detector = LostMemeberDetector(human=True)
     detector.run()

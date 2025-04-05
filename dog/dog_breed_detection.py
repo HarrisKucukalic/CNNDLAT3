@@ -255,65 +255,6 @@ if __name__ == "__main__":
     val_dir = NEW_DATA_PATH / "val"
     test_dir = NEW_DATA_PATH / "test"
 
-
-    # try:
-    #     for image_path, label_path in zip(train_df["image_path"], train_df["new_annotation_path"]):
-    #         image_path = pathlib.Path(image_path).resolve()
-    #         label_path = pathlib.Path(label_path).resolve()
-    #         images_dir_path = train_dir / "images"
-    #         labels_dir_path = train_dir / "labels"
-    #         os.makedirs(images_dir_path, exist_ok=True)
-    #         os.makedirs(labels_dir_path, exist_ok=True)
-    #
-    #         try:
-    #             os.link(image_path, images_dir_path / image_path.name)  # Hard link
-    #         except OSError:
-    #             shutil.copy(image_path, images_dir_path / image_path.name)  # Copy fallback
-    #
-    #         try:
-    #             os.link(label_path, labels_dir_path / label_path.name)
-    #         except OSError:
-    #             shutil.copy(label_path, labels_dir_path / label_path.name)
-    #
-    #     for image_path, label_path in zip(val_df["image_path"], val_df["new_annotation_path"]):
-    #         image_path = pathlib.Path(image_path).resolve()
-    #         label_path = pathlib.Path(label_path).resolve()
-    #         images_dir_path = val_dir / "images"
-    #         labels_dir_path = val_dir / "labels"
-    #         os.makedirs(images_dir_path, exist_ok=True)
-    #         os.makedirs(labels_dir_path, exist_ok=True)
-    #
-    #         try:
-    #             os.link(image_path, images_dir_path / image_path.name)
-    #         except OSError:
-    #             shutil.copy(image_path, images_dir_path / image_path.name)
-    #
-    #         try:
-    #             os.link(label_path, labels_dir_path / label_path.name)
-    #         except OSError:
-    #             shutil.copy(label_path, labels_dir_path / label_path.name)
-    #
-    #     for image_path, label_path in zip(test_df["image_path"], test_df["new_annotation_path"]):
-    #         image_path = pathlib.Path(image_path).resolve()
-    #         label_path = pathlib.Path(label_path).resolve()
-    #         images_dir_path = test_dir / "images"
-    #         labels_dir_path = test_dir / "labels"
-    #         os.makedirs(images_dir_path, exist_ok=True)
-    #         os.makedirs(labels_dir_path, exist_ok=True)
-    #
-    #         try:
-    #             os.link(image_path, images_dir_path / image_path.name)
-    #         except OSError:
-    #             shutil.copy(image_path, images_dir_path / image_path.name)
-    #
-    #         try:
-    #             os.link(label_path, labels_dir_path / label_path.name)
-    #         except OSError:
-    #             shutil.copy(label_path, labels_dir_path / label_path.name)
-    #
-    # except FileExistsError:
-    #     pass
-
     dataset_details = {
         "path": str(NEW_DATA_PATH),
         "train": "train",
