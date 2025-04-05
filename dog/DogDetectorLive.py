@@ -1,7 +1,8 @@
 import cv2
 import random
 from ultralytics import YOLO
-from colorama import Fore, Style
+import torch
+import torchvision
 
 class LostMemeberDetector:
     def __init__(self, human=False, yolo_dog_model='best.pt', yolo_human_model='yolo12n.pt'):
@@ -30,7 +31,7 @@ class LostMemeberDetector:
         detections = []
         if self.human:
             # Process frame with human model (only keep 'person' class)
-            human_results = self.yolo_human(img)
+            human_results = self.yolo_human(img, device=0)
             for result in human_results:
                 for box in result.boxes:
                     class_id = int(box.cls)
@@ -46,7 +47,7 @@ class LostMemeberDetector:
             highest_conf_breed = None
             highest_conf = 0
 
-            dog_results = self.yolo_dog(img)
+            dog_results = self.yolo_dog(img, device=0)
             for result in dog_results:
                 for box in result.boxes:
                     class_id = int(box.cls)
@@ -91,5 +92,10 @@ class LostMemeberDetector:
 
 # Example usage when running this file directly
 if __name__ == "__main__":
+    print("Torch Version:", torch.__version__)
+    print("TorchVision Version:", torchvision.__version__)
+    print("CUDA Available:", torch.cuda.is_available())
+    print("CUDA Device:", torch.cuda.get_device_name(0))
+    print("Settings")
     detector = LostMemeberDetector(human=False)
     detector.run()
