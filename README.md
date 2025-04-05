@@ -13,9 +13,9 @@ This project uses **YOLOv12n** to perform real-time detection of humans and dog 
 
 
 ## Sources:
-Dog Breed Detection Database and base model: https://www.kaggle.com/code/chg0901/dog-breed-detection
-YOLOv12n: https://github.com/sunsmarterjie/yolov12
-Face recognition: https://www.youtube.com/watch?v=iBomaK2ARyI
+- Dog Breed Detection Database and base model: https://www.kaggle.com/code/chg0901/dog-breed-detection
+- YOLOv12n: https://github.com/sunsmarterjie/yolov12
+- Face recognition: https://www.youtube.com/watch?v=iBomaK2ARyI
 
 ## 🚀 Getting Started
 
