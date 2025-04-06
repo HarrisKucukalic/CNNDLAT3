@@ -5,8 +5,8 @@ import torch
 import torchvision
 
 class LostMemeberDetector:
-    def __init__(self, human=False, yolo_dog_model='best.pt', yolo_human_model='yolo12n.pt'):
-        self.cap = cv2.VideoCapture(0)
+    def __init__(self, human=False, yolo_dog_model='best.pt', yolo_human_model='yolo12n.pt', camera=cv2.VideoCapture(0)):
+        self.cap = camera
         self.yolo_dog = YOLO(yolo_dog_model)
         self.yolo_human = YOLO(yolo_human_model)
         self.detected_classes = set()
@@ -90,6 +90,9 @@ class LostMemeberDetector:
         self.cap.release()
         cv2.destroyAllWindows()
 
+    def return_frame(self):
+        return self.process_frame()
+
 # Example usage when running this file directly
 if __name__ == "__main__":
     print("Torch Version:", torch.__version__)
@@ -97,5 +100,5 @@ if __name__ == "__main__":
     print("CUDA Available:", torch.cuda.is_available())
     print("CUDA Device:", torch.cuda.get_device_name(0))
     print("Settings")
-    detector = LostMemeberDetector(human=True)
+    detector = LostMemeberDetector(human=True, camera=cv2.VideoCapture(0))
     detector.run()
