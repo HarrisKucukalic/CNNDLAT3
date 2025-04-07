@@ -1,0 +1,29 @@
+@font-face {
+    font-family: 'Horizon';
+    src: url('fonts/Horizon.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+body {
+    text-align: center;
+    background-color: #f0f0f0;
+    font-family: 'Horizon', sans-serif;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 30px;
+    font-family: 'Horizon', sans-serif;
+    color: #333;
+}
+
+#bg {
+    display: block;
+    margin: 20px auto;
+    max-width: 90%;
+    height: auto;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+}
