@@ -1,7 +1,16 @@
-from flask import Flask, render_template, Response, request
+from flask import Flask, render_template, Response, request, jsonify
+import os
+from werkzeug.utils import secure_filename
 from camera import VideoCamera
-from LiveObjectDetector import LostMemeberDetector
-# Source: https://www.youtube.com/watch?v=-4v4A550K3w
+
+DOG_UPLOAD = r'C:\Users\Harris\PycharmProjects\CNNDLAT3\Final\dog_photo_upload'
+HUMAN_UPLOAD = r'C:\Users\Harris\PycharmProjects\CNNDLAT3\Final\human_photo_upload'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jepg', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# Source: https://www.youtube.com/watch?v=-4v4A550K3w,
 app = Flask(__name__)
 
 # Home page = '/', about would be '/about', etc.
@@ -11,14 +20,32 @@ def index():
     return render_template('index.html')
 
 @app.route('/human_detection')
-
 def human():
     return render_template('human.html',  human=False, face=False)
 
 @app.route('/dog_detection')
-
 def dog():
     return render_template('dog.html', human=False, face=False)
+
+@app.route('/upload/human', methods=['GET', 'POST'])
+def human_upload():
+    if request.method == 'POST':
+        file = request.files['file']
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(HUMAN_UPLOAD, filename))
+            return 'Human photo uploaded successfully'
+    return render_template('human_upload.html')
+
+@app.route('/upload/dog', methods=['GET', 'POST'])
+def dog_upload():
+    if request.method == 'POST':
+        file = request.files['file']
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(DOG_UPLOAD, filename))
+            return 'Dog photo uploaded successfully'
+    return render_template('dog_upload.html')
 
 def gen(camera):
     while True:

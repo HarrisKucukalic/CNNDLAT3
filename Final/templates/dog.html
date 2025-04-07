@@ -8,8 +8,9 @@
 <body>
     <h1>Live Feed</h1>
     <img id="bg" src="{{ url_for('video_feed') }}?human={{ 'true' if human else 'false' }}}">
-    <div class="button-container">
+        <div class="button-container">
         <a href="{{ url_for('index') }}" class="btn">← Back</a>
+        <a href="{{ url_for('dog_upload') }}" class="btn">Upload Dog Photo</a>  <!-- New upload button -->
     </div>
 </body>
 </html>
