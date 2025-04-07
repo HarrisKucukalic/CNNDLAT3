@@ -13,12 +13,13 @@ def index():
 @app.route('/human_detection')
 
 def human():
-    return render_template('human.html', human=True)
+    return render_template('human.html',  human=False, face=False)
 
 @app.route('/dog_detection')
 
 def dog():
-    return render_template('dog.html', human=False)
+    return render_template('dog.html', human=False, face=False)
+
 def gen(camera):
     while True:
         frame = camera.get_frame()
@@ -28,7 +29,8 @@ def gen(camera):
 @app.route('/video_feed')
 def video_feed():
     is_human = request.args.get('human', 'false').lower() == 'true'
-    return Response(gen(VideoCamera(human=is_human)),
+    is_face = request.args.get('face', 'false').lower() == 'true'
+    return Response(gen(VideoCamera(human=is_human, face=is_face)),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 if __name__ == '__main__':

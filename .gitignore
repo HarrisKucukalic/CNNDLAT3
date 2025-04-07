@@ -12,14 +12,14 @@ __pycache__/
 
 .idea/
 
-dog/Dog Breed Dataset.zip
-dog/annotations/
-dog/data/
-dog/detection/
-dog/dog_breed_detection/
-dog/extracted_files/
-dog/slides/
-dog/images/
+Final/Dog Breed Dataset.zip
+Final/annotations/
+Final/data/
+Final/detection/
+Final/dog_breed_detection/
+Final/extracted_files/
+Final/slides/
+Final/images/
 
 
 build/

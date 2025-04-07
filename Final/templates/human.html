@@ -6,7 +6,11 @@
     <title>Human Detection</title>
 </head>
 <body>
-    <h1>Live Feed</h1>
-<img id="bg" src="{{ url_for('video_feed') }}?human={{ 'true' if human else 'false' }}">
+    <h1>Human Detection</h1>
+    <div class="button-container">
+        <a href="{{ url_for('video_feed', human=True, face=False) }}" class="btn">Human Body</a>
+        <a href="{{ url_for('video_feed', human=True, face=True) }}" class="btn">Face Detection</a>
+    </div>
+<img id="bg" src="{{ url_for('video_feed', human=False, Face=False) }}">
 </body>
 </html>

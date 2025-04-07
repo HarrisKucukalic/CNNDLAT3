@@ -3,8 +3,8 @@ import pickle
 import face_recognition
 import numpy as np
 
-class FaceDetector():
-    def __int__(self, camera=cv2.VideoCapture(0)):
+class FaceDetector:
+    def __init__(self, camera=cv2.VideoCapture(0)):
         self.camera = camera
         print("Loading encoded faces ...")
         file = open('EncodeFile.p', 'rb')
@@ -13,7 +13,6 @@ class FaceDetector():
         self.encoded_list_known, self.ids = self.encoded_list_known_w_ids
         # print(ids)
         print("Encoded faces loaded")
-
     def process_face(self):
         success, img = self.camera.read()
         if not success:
@@ -33,14 +32,15 @@ class FaceDetector():
             if matches[match_index]:
                 y1, x2, y2, x1 = face_loc
                 y1, x2, y2, x1 = [v * 4 for v in (y1, x2, y2, x1)]
-
                 # Draw bounding box
                 bbox = (x1, y1), (x2, y2)
                 cv2.rectangle(img, bbox[0], bbox[1], (0, 255, 0), 1)
                 cv2.putText(img, self.ids[match_index], (x1, y1 - 10),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
 
-        return img_s
+        # return img
+        return img
 
-
+    def return_face(self):
+        return self.process_face()
 
