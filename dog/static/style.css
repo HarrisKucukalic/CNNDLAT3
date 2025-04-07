@@ -8,7 +8,8 @@
 
 body {
     text-align: center;
-    background-color: #f0f0f0;
+    background-color: #000; /* Black background */
+    color: #fff;            /* White default text */
     font-family: 'Horizon', sans-serif;
 }
 
@@ -16,7 +17,7 @@ h1 {
     text-align: center;
     margin-top: 30px;
     font-family: 'Horizon', sans-serif;
-    color: #333;
+    color: #fff; /* White font for the header */
 }
 
 #bg {
@@ -24,6 +25,6 @@ h1 {
     margin: 20px auto;
     max-width: 90%;
     height: auto;
-    border: 2px solid #ccc;
+    border: 2px solid #555;  /* Optional: darker border to match dark theme */
     border-radius: 8px;
 }

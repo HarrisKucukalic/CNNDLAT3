@@ -2,10 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>TrackMate</title>
+    <title>TrackMate Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Person and Dog detection using YOLOv12n</h1>
-<img id="bg" src="{{ url_for('video_feed') }}">
+    <h1>Welcome to TrackMate</h1>
+    <div class="button-container">
+        <a href="{{ url_for('dog') }}" class="btn">Dog Detection</a>
+        <a href="{{ url_for('human') }}" class="btn">Person Detection</a>
+    </div>
 </body>
 </html>
