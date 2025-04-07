@@ -8,5 +8,8 @@
 <body>
     <h1>Live Feed</h1>
     <img id="bg" src="{{ url_for('video_feed') }}?human={{ 'true' if human else 'false' }}}">
+    <div class="button-container">
+        <a href="{{ url_for('index') }}" class="btn">← Back</a>
+    </div>
 </body>
 </html>

@@ -23,7 +23,6 @@ class VideoCamera(object):
             frame = self.detector.return_frame()
         else:
             ret, frame = self.video.read()
-
         ret, jpeg = cv2.imencode('.jpg', frame)
 
         # Return the JPEG-encoded image as bytes

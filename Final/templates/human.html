@@ -7,10 +7,21 @@
 </head>
 <body>
     <h1>Human Detection</h1>
-    <div class="button-container">
-        <a href="{{ url_for('video_feed', human=True, face=False) }}" class="btn">Human Body</a>
-        <a href="{{ url_for('video_feed', human=True, face=True) }}" class="btn">Face Detection</a>
+
+    <img id="bg" src="{{ url_for('video_feed') }}" style="max-width: 100%; border: 2px solid black;">
+     <div class="button-container">
+        <button class="btn" onclick="setVideoSrc(true, false)">Human Body</button>
+        <button class="btn" onclick="setVideoSrc(true, true)">Face Detection</button>
+         <a href="{{ url_for('index') }}" class="btn">← Back to Home</a>
     </div>
-<img id="bg" src="{{ url_for('video_feed', human=False, Face=False) }}">
+
+    <script>
+        function setVideoSrc(human, face) {
+            const img = document.getElementById("bg");
+            const timestamp = new Date().getTime();  // Prevent caching
+            let url = `/video_feed?human=${human}&face=${face}&t=${timestamp}`;
+            img.src = url;
+        }
+    </script>
 </body>
 </html>

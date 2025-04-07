@@ -93,12 +93,5 @@ class LostMemeberDetector:
     def return_frame(self):
         return self.process_frame()
 
-# Example usage when running this file directly
-if __name__ == "__main__":
-    print("Torch Version:", torch.__version__)
-    print("TorchVision Version:", torchvision.__version__)
-    print("CUDA Available:", torch.cuda.is_available())
-    print("CUDA Device:", torch.cuda.get_device_name(0))
-    print("Settings")
-    detector = LostMemeberDetector(human=True, camera=cv2.VideoCapture(0))
-    detector.run()
+    def __del__(self):
+        self.cap.release()

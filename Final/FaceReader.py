@@ -44,3 +44,5 @@ class FaceDetector:
     def return_face(self):
         return self.process_face()
 
+    def __del__(self):
+        self.camera.release()
