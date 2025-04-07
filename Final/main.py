@@ -1,6 +1,6 @@
 from flask import Flask, render_template, Response, request
 from camera import VideoCamera
-from DogDetectorLive import LostMemeberDetector
+from LiveObjectDetector import LostMemeberDetector
 # Source: https://www.youtube.com/watch?v=-4v4A550K3w
 app = Flask(__name__)
 

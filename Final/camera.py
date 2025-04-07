@@ -1,5 +1,6 @@
 import cv2
-from DogDetectorLive import LostMemeberDetector
+from LiveObjectDetector import LostMemeberDetector
+from FaceReader import FaceDetector
 # object can be any type of video
 
 class VideoCamera(object):

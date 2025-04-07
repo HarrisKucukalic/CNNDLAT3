@@ -4,7 +4,7 @@ import face_recognition
 import pickle
 
 # import people
-image_folder = 'Images'
+image_folder = 'encoded_faces'
 images_path_list = os.listdir(image_folder)
 image_list = []
 ids = []
