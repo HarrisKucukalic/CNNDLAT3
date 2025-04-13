@@ -58,3 +58,49 @@ h1 {
     color: black;
     border: 2px solid black;
 }
+.upload-form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    font-family: 'Horizon', sans-serif;
+}
+
+.form-label {
+    color: black;
+    font-weight: bold;
+}
+
+.form-input, .form-submit {
+    font-family: 'Horizon', sans-serif;
+    padding: 10px;
+    border: 2px solid black;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #000;
+    cursor: pointer;
+}
+
+.form-input {
+    width: 200px;
+}
+
+.form-submit {
+    background-color: #000;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.form-submit:hover {
+    background-color: white;
+    color: black;
+    border: 2px solid black;
+}
+
+.form-divider {
+    height: 2px;
+    background-color: #ccc;
+    margin: 20px 0;
+    border-radius: 5px;
+}

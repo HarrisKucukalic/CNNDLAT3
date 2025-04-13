@@ -74,6 +74,39 @@ class LostMemeberDetector:
 
         return img
 
+    def get_image_prediction(self, img):
+        detections = []
+        if self.human:
+            results = self.yolo_human(img, device=0)
+            for result in results:
+                for box in result.boxes:
+                    class_id = int(box.cls)
+                    class_name = result.names[class_id]
+                    confidence = box.conf[0].item()
+                    if class_name.lower() == 'person' and confidence > 0.6:
+                        x1, y1, x2, y2 = map(int, box.xyxy[0])
+                        colour = self.generate_rand_col(class_name)
+                        detections.append((class_name, confidence, x1, y1, x2, y2, colour))
+        else:
+            results = self.yolo_dog(img, device=0)
+            for result in results:
+                for box in result.boxes:
+                    class_id = int(box.cls)
+                    class_name = result.names[class_id]
+                    confidence = box.conf[0].item()
+                    if confidence > 0.6:
+                        x1, y1, x2, y2 = map(int, box.xyxy[0])
+                        colour = (255, 0, 0)
+                        detections.append((class_name, confidence, x1, y1, x2, y2, colour))
+
+        # Draw detections
+        for class_name, confidence, x1, y1, x2, y2, colour in detections:
+            cv2.rectangle(img, (x1, y1), (x2, y2), colour, 2)
+            label = f"{class_name} {confidence:.2f}"
+            cv2.putText(img, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, colour, 2)
+
+        return img
+
     def run(self):
         while True:
             img = self.process_frame()

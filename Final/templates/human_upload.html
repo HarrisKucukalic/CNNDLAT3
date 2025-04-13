@@ -5,13 +5,24 @@
     <title>Upload Human Media</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-    <h1>Upload Human File</h1>
+    <h1>Person Detection</h1>
     <div class="button-container">
-        <form method="post" enctype="multipart/form-data">
-            <input type="file" name="file">
-            <input type="submit" value="Upload">
+        <!-- Upload Person Form -->
+        <form method="POST" enctype="multipart/form-data" class="upload-form">
+            <label class="form-label">Upload Person:</label>
+            <input type="file" name="person_file" class="form-input">
+            <input type="submit" value="Upload Person" class="form-submit">
         </form>
-         <a href="{{ url_for('human') }}" class="btn">← Back</a>
+
+        <div class="form-divider"></div>
+
+        <!-- Upload Face Form -->
+        <form method="POST" enctype="multipart/form-data" class="upload-form">
+            <label class="form-label">Upload Face:</label>
+            <input type="file" name="face_file" class="form-input">
+            <input type="submit" value="Upload Face" class="form-submit">
+        </form>
+
+        <a href="{{ url_for('human') }}" class="btn">← Back</a>
     </div>
-</body>
 </html>

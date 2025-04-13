@@ -7,11 +7,11 @@
 </head>
     <h1>Upload Dog File</h1>
     <div class="button-container">
-        <form method="post" enctype="multipart/form-data">
-            <input type="file" name="file">
-            <input type="submit" value="Upload">
+    <form method="POST" enctype="multipart/form-data" class="upload-form">
+            <label class="form-label">Upload Dog:</label>
+            <input type="file" name="dog_file" class="form-input">
+            <input type="submit" value="Upload Dog" class="form-submit">
         </form>
          <a href="{{ url_for('dog') }}" class="btn">← Back</a>
     </div>
-</body>
 </html>

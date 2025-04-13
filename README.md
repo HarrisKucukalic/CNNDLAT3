@@ -17,6 +17,7 @@ This project uses **YOLOv12n** to perform real-time detection of humans and dog 
 - YOLOv12n: https://github.com/sunsmarterjie/yolov12
 - Face recognition: https://www.youtube.com/watch?v=iBomaK2ARyI
 
+
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -26,6 +27,9 @@ This project uses **YOLOv12n** to perform real-time detection of humans and dog 
 - OpenCV
 - `face_recognition` or `dlib` (for facial encoding)
 - `pickle` (standard Python library)
+- Do all as administrator
+- Put dlib into python directory
+- In dlib run python setup.py install
 
 Install dependencies:
 

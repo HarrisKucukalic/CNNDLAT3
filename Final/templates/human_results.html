@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Prediction Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-$END$
+    <h1>Prediction Result</h1>
+    <img src="{{ image_uri }}" alt="Prediction Output" style="max-width: 100%; border: 2px solid black;">
+    <br>
+    <a href="{{ url_for('human_upload') }}">← Upload Another</a>
 </body>
 </html>

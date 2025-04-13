@@ -1,7 +1,13 @@
+import base64
+
+import cv2
 from flask import Flask, render_template, Response, request, jsonify
 import os
 from werkzeug.utils import secure_filename
+import numpy as np
 from camera import VideoCamera
+from LiveObjectDetector import LostMemeberDetector
+from FaceReader import FaceDetector
 
 DOG_UPLOAD = r'C:\Users\Harris\PycharmProjects\CNNDLAT3\Final\dog_photo_upload'
 HUMAN_UPLOAD = r'C:\Users\Harris\PycharmProjects\CNNDLAT3\Final\human_photo_upload'
@@ -30,21 +36,54 @@ def dog():
 @app.route('/upload/human', methods=['GET', 'POST'])
 def human_upload():
     if request.method == 'POST':
-        file = request.files['file']
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(HUMAN_UPLOAD, filename))
-            return 'Human photo uploaded successfully'
+        person_file = request.files.get('person_file')
+        face_file = request.files.get('face_file')
+        if person_file and allowed_file(person_file.filename):
+            npimg = np.frombuffer(person_file.read(), np.uint8)
+            img = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
+
+            detector = LostMemeberDetector(human=True)
+            processed_img = detector.get_image_prediction(img)
+
+            # Convert to base64 to embed in HTML
+            _, buffer = cv2.imencode('.jpg', processed_img)
+            img_b64 = base64.b64encode(buffer).decode('utf-8')
+            img_uri = f"data:image/jpeg;base64,{img_b64}"
+
+            return render_template('human_results.html', image_uri=img_uri)
+        if face_file and allowed_file(face_file.filename):
+            npimg = np.frombuffer(face_file.read(), np.uint8)
+            img = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
+
+            face_reader = FaceDetector()
+            processed_img = face_reader.process_img(img)
+
+            # Convert to base64 to embed in HTML
+            _, buffer = cv2.imencode('.jpg', processed_img)
+            img_b64 = base64.b64encode(buffer).decode('utf-8')
+            img_uri = f"data:image/jpeg;base64,{img_b64}"
+
+            return render_template('human_results.html', image_uri=img_uri)
+
     return render_template('human_upload.html')
 
 @app.route('/upload/dog', methods=['GET', 'POST'])
 def dog_upload():
     if request.method == 'POST':
-        file = request.files['file']
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(DOG_UPLOAD, filename))
-            return 'Dog photo uploaded successfully'
+        file = request.files.get('dog_file')
+        if file:
+            npimg = np.frombuffer(file.read(), np.uint8)
+            img = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
+
+            detector = LostMemeberDetector(human=False)
+            processed_img = detector.get_image_prediction(img)
+
+            # Convert to base64 to embed in HTML
+            _, buffer = cv2.imencode('.jpg', processed_img)
+            img_b64 = base64.b64encode(buffer).decode('utf-8')
+            img_uri = f"data:image/jpeg;base64,{img_b64}"
+
+            return render_template('dog_results.html', image_uri=img_uri)
     return render_template('dog_upload.html')
 
 def gen(camera):
@@ -59,6 +98,7 @@ def video_feed():
     is_face = request.args.get('face', 'false').lower() == 'true'
     return Response(gen(VideoCamera(human=is_human, face=is_face)),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
+
 
 if __name__ == '__main__':
     # debug allows you to change code while running and can re-render live
