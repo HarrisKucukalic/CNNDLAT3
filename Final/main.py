@@ -8,6 +8,7 @@ import numpy as np
 from camera import VideoCamera
 from LiveObjectDetector import LostMemeberDetector
 from FaceReader import FaceDetector
+from flask_socketio import SocketIO, emit
 
 DOG_UPLOAD = r'C:\Users\Harris\PycharmProjects\CNNDLAT3\Final\dog_photo_upload'
 HUMAN_UPLOAD = r'C:\Users\Harris\PycharmProjects\CNNDLAT3\Final\human_photo_upload'
@@ -18,10 +19,15 @@ def allowed_file(filename):
 
 # Source: https://www.youtube.com/watch?v=-4v4A550K3w,
 app = Flask(__name__)
+socketio = SocketIO(app)
+
+@socketio.on('signal')
+def handle_signal(data):
+    # Relay signaling messages between peers
+    emit('signal', data, broadcast=True, include_self=False)
 
 # Home page = '/', about would be '/about', etc.
 @app.route('/')
-
 def index():
     return render_template('index.html')
 

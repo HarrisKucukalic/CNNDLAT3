@@ -84,7 +84,7 @@ if __name__ == "__main__":
     PROJECT_NAME = "dog_breed_detection"
     DEVICE = device
     BATCH_SIZE = 16
-    EPOCHS = 35
+    EPOCHS = 50
 
     print(f"Using {device_name} as the Backend.")
     print(f"Number of Devices: {num_devices}")
@@ -454,7 +454,6 @@ if __name__ == "__main__":
         print("CUDA is not available. You are using the CPU.")
 
     # from ultralytics.utils.callbacks.raytune import on_fit_epoch_end
-    EPOCHS = 50
 
     model_name = "yolov12n.pt"
     version = "v2.0"
