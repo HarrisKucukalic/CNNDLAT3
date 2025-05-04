@@ -13,6 +13,26 @@ from flask_socketio import SocketIO, emit
 DOG_UPLOAD = r'C:\Users\Harris\PycharmProjects\CNNDLAT3\Final\dog_photo_upload'
 HUMAN_UPLOAD = r'C:\Users\Harris\PycharmProjects\CNNDLAT3\Final\human_photo_upload'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jepg', 'gif'}
+USERNAME = 'admin'
+PASSWORD = 'secret'
+
+def check_auth(username, password):
+    return username == USERNAME and password == PASSWORD
+
+def requires_auth(f):
+    from functools import wraps
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        if not auth or not check_auth(auth.username, auth.password):
+            return authenticate()
+        return f(*args, **kwargs)
+    return decorated
+def authenticate():
+    return Response(
+        'Login required.', 401,
+        {'WWW-Authenticate': 'Basic realm="Login Required"'}
+    )
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -28,8 +48,14 @@ def handle_signal(data):
 
 # Home page = '/', about would be '/about', etc.
 @app.route('/')
+@requires_auth
 def index():
     return render_template('index.html')
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 
 @app.route('/human_detection')
 def human():

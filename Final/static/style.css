@@ -104,3 +104,41 @@ h1 {
     margin: 20px 0;
     border-radius: 5px;
 }
+
+.top-right {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.top-right a {
+    padding: 8px 16px;
+    font-family: 'Horizon', sans-serif;
+    background-color: #000;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.top-right a:hover {
+    background-color: white;
+    color: black;
+    border: 2px solid black;
+}
+
+.white-box {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 50px auto;
+    font-family: Arial, sans-serif;
+}
+p {
+    padding: 8px 16px;
+    font-family: 'Horizon', sans-serif;
+    color: black;
+    text-decoration: none;
+    border-radius: 5px;
+}
