@@ -118,6 +118,17 @@ def dog_upload():
             return render_template('dog_results.html', image_uri=img_uri)
     return render_template('dog_upload.html')
 
+@app.route('/submit_location', methods=['POST'])
+def submit_location():
+    street = request.form['street']
+    suburb = request.form['suburb']
+    city = request.form['city']
+    source = request.form.get('source')
+    if source in ['human', 'dog']:
+        return jsonify({"message": "Location uploaded successfully"})
+    else:
+        return jsonify({"error": "Unknown source"}), 400
+
 def gen(camera):
     while True:
         frame = camera.get_frame()

@@ -9,6 +9,42 @@
     <h1>Prediction Result</h1>
     <img src="{{ image_uri }}" alt="Prediction Output" style="max-width: 100%; border: 2px solid black;">
     <br>
-    <a href="{{ url_for('dog_upload') }}">← Upload Another</a>
+    <form id="locationForm">
+         <form action="{{ url_for('submit_location') }}" method="post">
+             <input type="hidden" name="source" value="dog">
+             <label for="street">Street:</label>
+             <input type="text" id="street" name="street" required><br><br>
+
+             <label for="suburb">Suburb:</label>
+             <input type="text" id="suburb" name="suburb" required><br><br>
+
+            <label for="city">City:</label>
+            <input type="text" id="city" name="city" required><br><br>
+
+            <input type="submit" class="sub-btn" value="Submit Location">
+             {% if location_uploaded %}
+                <p style="color: green; font-weight: bold;">Uploaded successfully</p>
+            {% endif %}
+        </form>
+    </form>
+    <p id="uploadMsg" style="color: green; font-weight: bold;"></p>
+
+    <script>
+    document.getElementById('locationForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+
+        fetch('{{ url_for("submit_location") }}', {
+            method: 'POST',
+            body: formData
+        }).then(res => res.text())
+          .then(data => {
+              document.getElementById('uploadMsg').innerText = "Uploaded successfully";
+          });
+    });
+    </script>
+    <br>
+
+    <a href="{{ url_for('dog_upload') }}" class="sub-btn">← Upload Another</a>
 </body>
 </html>
