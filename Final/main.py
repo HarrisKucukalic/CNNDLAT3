@@ -59,7 +59,7 @@ def about():
 
 @app.route('/human_detection')
 def human():
-    return render_template('human.html',  human=False, face=False)
+    return render_template('human.html',  human=True, face=False)
 
 @app.route('/dog_detection')
 def dog():
