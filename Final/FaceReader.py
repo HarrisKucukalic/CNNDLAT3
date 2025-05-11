@@ -14,6 +14,10 @@ class FaceDetector:
         # print(ids)
         print("Encoded faces loaded")
     def process_face(self):
+        file = open('EncodeFile.p', 'rb')
+        self.encoded_list_known_w_ids = pickle.load(file)
+        file.close()
+        self.encoded_list_known, self.ids = self.encoded_list_known_w_ids
         success, img = self.camera.read()
         if not success:
             return None
@@ -42,6 +46,10 @@ class FaceDetector:
         return img
 
     def process_img(self, img):
+        file = open('EncodeFile.p', 'rb')
+        self.encoded_list_known_w_ids = pickle.load(file)
+        file.close()
+        self.encoded_list_known, self.ids = self.encoded_list_known_w_ids
         img_s = cv2.resize(img, (0, 0), fx=0.25, fy=0.25)
         img_s = cv2.cvtColor(img_s, cv2.COLOR_BGR2RGB)
 

@@ -5,7 +5,7 @@ import torch
 import torchvision
 
 class LostMemeberDetector:
-    def __init__(self, human=False, yolo_dog_model='best.pt', yolo_human_model='yolo12n.pt', camera=cv2.VideoCapture(0)):
+    def __init__(self, human=True, yolo_dog_model='best.pt', yolo_human_model='yolo12n.pt', camera=cv2.VideoCapture(0)):
         self.cap = camera
         self.yolo_dog = YOLO(yolo_dog_model)
         self.yolo_human = YOLO(yolo_human_model)

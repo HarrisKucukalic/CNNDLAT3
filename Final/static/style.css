@@ -163,3 +163,36 @@ p {
     color: black;
     border: 2px solid black;
 }
+
+.form-input {
+    color: black;
+    background-color: white;
+    border: 1px solid black;
+    padding: 5px;
+}
+
+.form-label {
+    color: black;
+    font-weight: bold;
+}
+
+.form-submit {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+.preview-img {
+    margin-top: 15px;
+    max-height: 300px;
+    display: block;
+    border: 1px solid #ccc;
+}
+
+.success-msg {
+    color: green;
+    font-weight: bold;
+    margin-top: 15px;
+}

@@ -1,5 +1,5 @@
 import base64
-
+from flask import current_app
 import cv2
 from flask import Flask, render_template, Response, request, jsonify
 import os
@@ -9,12 +9,24 @@ from camera import VideoCamera
 from LiveObjectDetector import LostMemeberDetector
 from FaceReader import FaceDetector
 from flask_socketio import SocketIO, emit
+import face_recognition
+import pickle
 
 DOG_UPLOAD = r'C:\Users\Harris\PycharmProjects\CNNDLAT3\Final\dog_photo_upload'
 HUMAN_UPLOAD = r'C:\Users\Harris\PycharmProjects\CNNDLAT3\Final\human_photo_upload'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jepg', 'gif'}
+NEW_DOG_UPLOAD = r'C:\Users\Harris\PycharmProjects\CNNDLAT3\Final\dog_photo_upload_new'
+NEW_HUMAN_UPLOAD = r'C:\Users\Harris\PycharmProjects\CNNDLAT3\Final\human_photo_upload_new'
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 USERNAME = 'admin'
 PASSWORD = 'secret'
+
+# Source: https://www.youtube.com/watch?v=-4v4A550K3w,
+app = Flask(__name__)
+socketio = SocketIO(app)
+
+app.config['NEW_DOG_UPLOAD'] = NEW_DOG_UPLOAD
+app.config['NEW_HUMAN_UPLOAD'] = NEW_HUMAN_UPLOAD
 
 def check_auth(username, password):
     return username == USERNAME and password == PASSWORD
@@ -37,10 +49,6 @@ def authenticate():
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# Source: https://www.youtube.com/watch?v=-4v4A550K3w,
-app = Flask(__name__)
-socketio = SocketIO(app)
-
 @socketio.on('signal')
 def handle_signal(data):
     # Relay signaling messages between peers
@@ -52,20 +60,24 @@ def handle_signal(data):
 def index():
     return render_template('index.html')
 
+@app.route('/already_lost')
+def already_lost():
+    return render_template('already_lost.html')
+
 @app.route('/about')
 def about():
     return render_template('about.html')
 
 
-@app.route('/human_detection')
+@app.route('/already_lost/human_detection')
 def human():
     return render_template('human.html',  human=True, face=False)
 
-@app.route('/dog_detection')
+@app.route('/already_lost/dog_detection')
 def dog():
     return render_template('dog.html', human=False, face=False)
 
-@app.route('/upload/human', methods=['GET', 'POST'])
+@app.route('/already_lost/upload/human', methods=['GET', 'POST'])
 def human_upload():
     if request.method == 'POST':
         person_file = request.files.get('person_file')
@@ -99,7 +111,7 @@ def human_upload():
 
     return render_template('human_upload.html')
 
-@app.route('/upload/dog', methods=['GET', 'POST'])
+@app.route('/already_lost/upload/dog', methods=['GET', 'POST'])
 def dog_upload():
     if request.method == 'POST':
         file = request.files.get('dog_file')
@@ -128,6 +140,80 @@ def submit_location():
         return jsonify({"message": "Location uploaded successfully"})
     else:
         return jsonify({"error": "Unknown source"}), 400
+
+@app.route('/new_lost')
+def new_lost():
+    return render_template('new_lost.html')
+
+def save_new_image(image, human=True):
+    if image and allowed_file(image.filename):
+        filename = secure_filename(image.filename)
+        save_dir = app.config['NEW_HUMAN_UPLOAD'] if human else current_app.config['NEW_DOG_UPLOAD']
+        os.makedirs(save_dir, exist_ok=True)
+        file_path = os.path.join(save_dir, filename)
+        image.save(file_path)
+    else:
+        raise ValueError("Invalid file format. Allowed formats are png, jpg, jpeg, gif.")
+
+
+@app.route('/new_lost/new_dog', methods=['GET', 'POST'])
+def new_dog():
+    if request.method == 'POST':
+        file = request.files.get('dog_file')
+        if file:
+            npimg = np.frombuffer(file.read(), np.uint8)
+            img = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
+
+            detector = LostMemeberDetector(human=False)
+            processed_img = detector.get_image_prediction(img)
+
+            # Convert to base64 to embed in HTML
+            _, buffer = cv2.imencode('.jpg', processed_img)
+            img_b64 = base64.b64encode(buffer).decode('utf-8')
+            img_uri = f"data:image/jpeg;base64,{img_b64}"
+
+            return render_template('new_dog_results.html', image_uri=img_uri)
+    return render_template('new_dog.html')
+
+@app.route('/new_lost/new_human', methods=['GET', 'POST'])
+def new_human():
+    face_file = request.files.get('face_file')
+    if face_file and allowed_file(face_file.filename):
+        name = os.path.splitext(face_file.filename)[0]
+        npimg = np.frombuffer(face_file.read(), np.uint8)
+        img = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
+        rgb_img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        face_encodings = face_recognition.face_encodings(rgb_img)
+        if len(face_encodings) == 0:
+            return "No face detected. Please upload a clear image."
+
+        new_encoding = face_encodings[0]
+
+        # Load existing encodings
+        if os.path.exists("EncodeFile.p"):
+            with open("EncodeFile.p", 'rb') as file:
+                encoded_list_known, ids = pickle.load(file)
+        else:
+            encoded_list_known, ids = [], []
+
+        # Append new encoding and ID
+        encoded_list_known.append(new_encoding)
+        ids.append(name)
+
+        # Save back to pickle
+        with open("EncodeFile.p", 'wb') as file:
+            pickle.dump([encoded_list_known, ids], file)
+
+        # Display image back to user
+        _, buffer = cv2.imencode('.jpg', img)
+        img_b64 = base64.b64encode(buffer).decode('utf-8')
+        img_uri = f"data:image/jpeg;base64,{img_b64}"
+
+        return render_template('new_human_results.html', image_uri=img_uri, name=name)
+
+    return render_template('new_human.html')
+
+
 
 def gen(camera):
     while True:
