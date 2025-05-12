@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Prediction Result</h1>
-    <img src="{{ image_uri }}" alt="Prediction Output" style="max-width: 100%; border: 2px solid black;">
+    <img src="{{ image_uri }}" alt="Prediction Output" style="max-width: 640px; max-height: 640px; border: 2px solid black;">
     <br>
     <form id="locationForm">
         <form action="{{ url_for('submit_location') }}" method="post">

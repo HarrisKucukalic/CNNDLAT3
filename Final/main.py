@@ -204,8 +204,10 @@ def new_human():
         with open("EncodeFile.p", 'wb') as file:
             pickle.dump([encoded_list_known, ids], file)
 
+        face_reader = FaceDetector()
+        processed_img = face_reader.process_img(img)
         # Display image back to user
-        _, buffer = cv2.imencode('.jpg', img)
+        _, buffer = cv2.imencode('.jpg', processed_img)
         img_b64 = base64.b64encode(buffer).decode('utf-8')
         img_uri = f"data:image/jpeg;base64,{img_b64}"
 
