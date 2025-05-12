@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Prediction Result</h1>
+    <h1>New Lost Person</h1>
 
     <img src="{{ image_uri }}" alt="New Lost Person" style="max-width: 640px; max-height: 640px; border: 2px solid black;">
     <br>
@@ -15,6 +15,8 @@
         <form action="{{ url_for('submit_location') }}" method="post">
             <input type="hidden" name="source" value="human">
             <input type="hidden" name="name" value="{{ name }}">
+            <label for="street">Name:</label>
+             <input type="text" id="human" name="human" required><br><br>
 
             <label for="street">Street:</label>
             <input type="text" id="street" name="street" required><br><br>

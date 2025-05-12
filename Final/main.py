@@ -132,6 +132,7 @@ def dog_upload():
 
 @app.route('/submit_location', methods=['POST'])
 def submit_location():
+    pet_name = request.form['pet']
     street = request.form['street']
     suburb = request.form['suburb']
     city = request.form['city']
@@ -144,16 +145,6 @@ def submit_location():
 @app.route('/new_lost')
 def new_lost():
     return render_template('new_lost.html')
-
-def save_new_image(image, human=True):
-    if image and allowed_file(image.filename):
-        filename = secure_filename(image.filename)
-        save_dir = app.config['NEW_HUMAN_UPLOAD'] if human else current_app.config['NEW_DOG_UPLOAD']
-        os.makedirs(save_dir, exist_ok=True)
-        file_path = os.path.join(save_dir, filename)
-        image.save(file_path)
-    else:
-        raise ValueError("Invalid file format. Allowed formats are png, jpg, jpeg, gif.")
 
 
 @app.route('/new_lost/new_dog', methods=['GET', 'POST'])
@@ -199,11 +190,11 @@ def new_human():
         # Append new encoding and ID
         encoded_list_known.append(new_encoding)
         ids.append(name)
-
+        encoded_list_known_w_ids = [encoded_list_known, ids]
         # Save back to pickle
-        with open("EncodeFile.p", 'wb') as file:
-            pickle.dump([encoded_list_known, ids], file)
-
+        pkl_file = open("EncodeFile.p", 'wb')
+        pickle.dump(encoded_list_known_w_ids, pkl_file)
+        pkl_file.close()
         face_reader = FaceDetector()
         processed_img = face_reader.process_img(img)
         # Display image back to user

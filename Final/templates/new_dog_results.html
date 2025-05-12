@@ -2,16 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Upload Lost Dog</title>
+    <title>Upload Lost Pet</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Prediction Result</h1>
+    <h1>New Lost Pet</h1>
     <img src="{{ image_uri }}" alt="New Lost Dog" style="max-width: 640px; max-height: 640px; border: 2px solid black;">
     <br>
     <form id="locationForm">
          <form action="{{ url_for('submit_location') }}" method="post">
              <input type="hidden" name="source" value="dog">
+             <label for="street">Pet Name:</label>
+             <input type="text" id="pet" name="pet" required><br><br>
+
              <label for="street">Street:</label>
              <input type="text" id="street" name="street" required><br><br>
 
