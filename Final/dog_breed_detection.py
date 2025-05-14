@@ -38,7 +38,7 @@ if __name__ == "__main__":
 
     # Define dataset paths (Update these paths if needed)
 
-    ROOT_DIR = pathlib.Path(r"C:\Users\Harris\PycharmProjects\DogDetector")
+    ROOT_DIR = pathlib.Path(r"C:\projects\CNNDLAT3\Final")
     ANNOTATIONS_PATH = ROOT_DIR / 'annotations'
     IMAGES_PATH = ROOT_DIR / 'images'
 
@@ -84,7 +84,7 @@ if __name__ == "__main__":
     PROJECT_NAME = "dog_breed_detection"
     DEVICE = device
     BATCH_SIZE = 16
-    EPOCHS = 50
+    EPOCHS = 200
 
     print(f"Using {device_name} as the Backend.")
     print(f"Number of Devices: {num_devices}")
@@ -456,7 +456,7 @@ if __name__ == "__main__":
     # from ultralytics.utils.callbacks.raytune import on_fit_epoch_end
 
     model_name = "yolov12n.pt"
-    version = "v2.0"
+    version = "v3.0"
     experiment_name = f"{model_name}-{version}"
     # save_dir = f"runs/train/{projext_name}"
 
@@ -466,6 +466,7 @@ if __name__ == "__main__":
     print("Starting training...")
     model.train(
         data=dataset_yaml_path,
+        workers=1,
         epochs=EPOCHS,
         imgsz=IMAGE_SIZE,
         batch=BATCH_SIZE,
@@ -476,27 +477,5 @@ if __name__ == "__main__":
 
         exist_ok=True,
         patience = 15,
-        save_period=5
+        save_period=10
         )
-
-
-
-
-# model_weight = "/kaggle/working/dog_breed_detection/yolov8m-v1/weights/last.pt"
-# model = model = YOLO(model_weight)
-# model.train(
-#     box=1,
-#     cls=2.5,
-#     dfl=5,
-#     resume=True
-# )
-#
-# model_weight = "/kaggle/working/dog_breed_detection/yolov8m-v1/weights/last.pt"
-# model = model = YOLO(model_weight)
-# model.train(
-#     box=1,
-#     cls=5,
-#     dfl=8,
-#     resume=True
-# )
-
