@@ -196,3 +196,48 @@ p {
     font-weight: bold;
     margin-top: 15px;
 }
+
+.table-section {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 900px;
+    margin: 40px auto;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    font-family: 'Horizon', sans-serif;
+    color: black;
+}
+
+/* Table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-family: 'Horizon', sans-serif;
+}
+
+/* Table headers */
+th {
+    background-color: #000;
+    color: white;
+    padding: 12px 10px;
+    border: 1px solid #000;
+    text-align: left;
+}
+
+/* Table cells */
+td {
+    padding: 12px 10px;
+    border: 1px solid #ddd;
+}
+
+/* Zebra striping */
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Hover effect for rows */
+tbody tr:hover {
+    background-color: #ddd;
+    cursor: pointer;
+}

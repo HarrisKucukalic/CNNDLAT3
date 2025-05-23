@@ -2,16 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Prediction Result</title>
+    <title>Dog Prediction Result</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <h1>Prediction Result</h1>
     <img src="{{ image_uri }}" alt="Prediction Output" style="max-width: 100%; border: 2px solid black;">
     <br>
-    <form id="locationForm">
-         <form action="{{ url_for('submit_location') }}" method="post">
-             <input type="hidden" name="source" value="dog">
+         <form id="locationForm" action="{{ url_for('submit_location') }}" method="post">
+             <input type="hidden" name="source" value="old_pet">
              <label for="street">Street:</label>
              <input type="text" id="street" name="street" required><br><br>
 
@@ -26,7 +25,6 @@
                 <p style="color: green; font-weight: bold;">Uploaded successfully</p>
             {% endif %}
         </form>
-    </form>
     <p id="uploadMsg" style="color: green; font-weight: bold;"></p>
 
     <script>

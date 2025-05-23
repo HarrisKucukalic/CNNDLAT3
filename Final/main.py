@@ -1,9 +1,7 @@
 import base64
-from flask import current_app
 import cv2
 from flask import Flask, render_template, Response, request, jsonify
 import os
-from werkzeug.utils import secure_filename
 import numpy as np
 from camera import VideoCamera
 from LiveObjectDetector import LostMemeberDetector
@@ -11,11 +9,11 @@ from FaceReader import FaceDetector
 from flask_socketio import SocketIO, emit
 import face_recognition
 import pickle
+import csv
 
-DOG_UPLOAD = r'C:\Users\Harris\PycharmProjects\CNNDLAT3\Final\dog_photo_upload'
-HUMAN_UPLOAD = r'C:\Users\Harris\PycharmProjects\CNNDLAT3\Final\human_photo_upload'
-NEW_DOG_UPLOAD = r'C:\Users\Harris\PycharmProjects\CNNDLAT3\Final\dog_photo_upload_new'
-NEW_HUMAN_UPLOAD = r'C:\Users\Harris\PycharmProjects\CNNDLAT3\Final\human_photo_upload_new'
+LOST_HUMAN_CSV = r'C:\projects\CNNDLAT3\Final\lost_databases\lost_human_members.csv'
+LOST_PET_CSV = r'C:\projects\CNNDLAT3\Final\lost_databases\lost_pet_members.csv'
+
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 USERNAME = 'admin'
@@ -25,8 +23,6 @@ PASSWORD = 'secret'
 app = Flask(__name__)
 socketio = SocketIO(app)
 
-app.config['NEW_DOG_UPLOAD'] = NEW_DOG_UPLOAD
-app.config['NEW_HUMAN_UPLOAD'] = NEW_HUMAN_UPLOAD
 
 def check_auth(username, password):
     return username == USERNAME and password == PASSWORD
@@ -59,6 +55,41 @@ def handle_signal(data):
 @requires_auth
 def index():
     return render_template('index.html')
+
+@app.route('/lost_table')
+def lost_table():
+    lost_humans = []
+    lost_pets = []
+
+    try:
+        with open(LOST_HUMAN_CSV, newline='', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                lost_humans.append({
+                    'type': 'Human',
+                    'name': row['name'],
+                    'street': row['street'],
+                    'suburb': row['suburb'],
+                    'city': row['city']
+                })
+    except FileNotFoundError:
+        pass
+
+    try:
+        with open(LOST_PET_CSV, newline='', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                lost_pets.append({
+                    'type': 'Pet',
+                    'name': row['name'],
+                    'street': row['street'],
+                    'suburb': row['suburb'],
+                    'city': row['city']
+                })
+    except FileNotFoundError:
+        pass
+
+    return render_template('lost_table.html',  lost_humans=lost_humans, lost_pets=lost_pets)
 
 @app.route('/already_lost')
 def already_lost():
@@ -118,7 +149,6 @@ def dog_upload():
         if file:
             npimg = np.frombuffer(file.read(), np.uint8)
             img = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
-
             detector = LostMemeberDetector(human=False)
             processed_img = detector.get_image_prediction(img)
 
@@ -132,15 +162,32 @@ def dog_upload():
 
 @app.route('/submit_location', methods=['POST'])
 def submit_location():
-    pet_name = request.form['pet']
     street = request.form['street']
     suburb = request.form['suburb']
     city = request.form['city']
     source = request.form.get('source')
-    if source in ['human', 'dog']:
-        return jsonify({"message": "Location uploaded successfully"})
+
+    if not all([street, suburb, city, source]):
+        return jsonify({"error": "Missing required fields"}), 400
+    if source == 'new_human':
+        filename = LOST_HUMAN_CSV
+        name = request.form['new_human_name']
+    elif source == 'new_pet':
+        filename = LOST_PET_CSV
+        name = request.form['new_dog']
     else:
         return jsonify({"error": "Unknown source"}), 400
+
+    row = [name, street, suburb, city]
+    file_exists = os.path.isfile(filename)
+
+    with open(filename, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        if not file_exists:
+            writer.writerow(['name', 'street', 'suburb', 'city'])  # header
+        writer.writerow(row)
+
+    return jsonify({"message": f"{'Lost' if source.startswith('new_') else 'Found'} location uploaded successfully"})
 
 @app.route('/new_lost')
 def new_lost():
@@ -220,6 +267,7 @@ def video_feed():
     is_face = request.args.get('face', 'false').lower() == 'true'
     return Response(gen(VideoCamera(human=is_human, face=is_face)),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
+
 
 
 if __name__ == '__main__':

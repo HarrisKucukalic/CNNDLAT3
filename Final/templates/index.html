@@ -6,8 +6,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Welcome to TrackMate</h1>
+    <h1>TrackMate</h1>
     <div class="button-container">
+        <a href="{{ url_for('lost_table') }}" class="btn">Lost People & Pets</a>
         <a href="{{ url_for('new_lost') }}" class="btn">Upload New Lost Member</a>
         <a href="{{ url_for('already_lost') }}" class="btn">Found a lost Member?</a>
     </div>

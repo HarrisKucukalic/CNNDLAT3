@@ -9,27 +9,25 @@
     <h1>New Lost Pet</h1>
     <img src="{{ image_uri }}" alt="New Lost Dog" style="max-width: 640px; max-height: 640px; border: 2px solid black;">
     <br>
-    <form id="locationForm">
-         <form action="{{ url_for('submit_location') }}" method="post">
-             <input type="hidden" name="source" value="dog">
-             <label for="street">Pet Name:</label>
-             <input type="text" id="pet" name="pet" required><br><br>
+        <form id="locationForm" action="{{ url_for('submit_location') }}" method="post">
+            <input type="hidden" name="source" value="new_pet">
+            <input type="hidden" name="image_base64" value="{{ image_uri }}">
+            <label for="new_dog">Name:</label>
+            <input type="text" id="new_dog" name="new_dog" required><br><br>
+            <label for="street">Street:</label>
+            <input type="text" id="street" name="street" required><br><br>
 
-             <label for="street">Street:</label>
-             <input type="text" id="street" name="street" required><br><br>
-
-             <label for="suburb">Suburb:</label>
-             <input type="text" id="suburb" name="suburb" required><br><br>
+            <label for="suburb">Suburb:</label>
+            <input type="text" id="suburb" name="suburb" required><br><br>
 
             <label for="city">City:</label>
             <input type="text" id="city" name="city" required><br><br>
 
             <input type="submit" class="sub-btn" value="Submit Location">
-             {% if location_uploaded %}
+            {% if location_uploaded %}
                 <p style="color: green; font-weight: bold;">Uploaded successfully</p>
             {% endif %}
         </form>
-    </form>
     <p id="uploadMsg" style="color: green; font-weight: bold;"></p>
 
     <script>
