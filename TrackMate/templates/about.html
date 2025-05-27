@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top-right">
+            <a href="{{ url_for('index') }}">← Back to Home</a>
+    </div>
+    <h1>About This App</h1>
+    <h2>Created By Harris, Bunmi and Sallum</h2>
+    <div class="white-box">
+        <p>Hello, and welcome to TrackMate! Our project involves three models, two YOLOv12n for human and dog breed
+        detection and a face_recognition module that can read 128 unique facial points. The goal of this project is
+        to create a system that can be used to report and identify lost pets and people more rapidly, helping local enforcement
+        agencies. Our next steps will be to receive CASA approval to try and integrate a drone feed element to help locate members who
+        are lost in more isolated areas.</p>
+    </div>
+
+</body>
+</html>

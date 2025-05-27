@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Already Lost Mate</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Already Lost Mate</h1>
+    <div class="button-container">
+        <a href="{{ url_for('dog') }}" class="btn">Dog Detection</a>
+        <a href="{{ url_for('human') }}" class="btn">Person Detection</a>
+        <a href="{{ url_for('index') }}" class="btn">← Back</a>
+    </div>
+</body>
+</html>

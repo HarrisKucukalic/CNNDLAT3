@@ -2,8 +2,8 @@ import cv2
 import os
 import face_recognition
 import pickle
-
-# import people
+# Original code from YouTube tutorial: https://www.youtube.com/watch?v=iBomaK2ARyI&t=872s
+# import people in encoded_faces file to encode into the pickle file
 image_folder = 'encoded_faces'
 images_path_list = os.listdir(image_folder)
 image_list = []

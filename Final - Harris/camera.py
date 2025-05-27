@@ -2,8 +2,8 @@ import cv2
 from LiveObjectDetector import LostMemeberDetector
 from FaceReader import FaceDetector
 # object can be any type of video
-
 class VideoCamera(object):
+    # Initialise the Video Camera for the Human and Dog detection
     def __init__(self, human=False, face=False):
         self.human = human
         self.face = face
@@ -14,7 +14,6 @@ class VideoCamera(object):
 
     def __del__(self):
         self.video.release()
-
 
     def get_frame(self):
         if self.face:

@@ -5,6 +5,7 @@ import torch
 import torchvision
 
 class LostMemeberDetector:
+    # Assigns the models to be used for each type of detection.
     def __init__(self, human=True, yolo_dog_model='best.pt', yolo_human_model='yolo12n.pt', camera=cv2.VideoCapture(0)):
         self.cap = camera
         self.yolo_dog = YOLO(yolo_dog_model)
@@ -14,7 +15,7 @@ class LostMemeberDetector:
         self.human = human
 
     def generate_rand_col(self, class_name):
-        """Generate a unique color for each class if not already assigned."""
+        # Generate a unique color for each class if not already assigned.
         if class_name not in self.class_colours:
             self.class_colours[class_name] = (
                 random.randint(50, 255),
@@ -43,6 +44,7 @@ class LostMemeberDetector:
                         x1, y1, x2, y2 = map(int, box.xyxy[0])
                         detections.append((class_name, confidence, x1, y1, x2, y2, colour))
 
+        # if it's not a person that is being looked for, we default to our custom dog breed detector.
         else:
             highest_conf_breed = None
             highest_conf = 0
@@ -65,7 +67,7 @@ class LostMemeberDetector:
                 x1, y1, x2, y2 = map(int, box_coords)
                 detections.append((class_name, confidence, x1, y1, x2, y2, colour))
 
-        # Draw all detections
+        # Draw detections where the confidence of the dog breed is 0.6. This reduces the probability of incorrect predictions and multi dog breed detection
         for class_name, confidence, x1, y1, x2, y2, colour in detections:
             if confidence > 0.6:
                 cv2.rectangle(img, (x1, y1), (x2, y2), colour, 2)
@@ -74,6 +76,7 @@ class LostMemeberDetector:
 
         return img
 
+    # As in the face reader, these components below are for the front end static display of classified images.
     def get_image_prediction(self, img):
         detections = []
         if self.human:
@@ -107,6 +110,7 @@ class LostMemeberDetector:
 
         return img
 
+    # This code was made for initial local testing of the models, not in a web application. These remain here for when further local testing is required.
     def run(self):
         while True:
             img = self.process_frame()
