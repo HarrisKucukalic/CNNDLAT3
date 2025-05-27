@@ -13,8 +13,8 @@ import csv
 from functools import wraps
 
 # Set our "databases" for lost people and pets - currently CSV files to show proof of concept.
-LOST_HUMAN_CSV = r'C:\projects\CNNDLAT3\Final\lost_databases\lost_human_members.csv'
-LOST_PET_CSV = r'C:\projects\CNNDLAT3\Final\lost_databases\lost_pet_members.csv'
+LOST_HUMAN_CSV = r'C:\projects\CNNDLAT3\TrackMate\lost_databases\lost_human_members.csv'
+LOST_PET_CSV = r'C:\projects\CNNDLAT3\TrackMate\lost_databases\lost_pet_members.csv'
 
 # These are the image types allowed to be uploaded. They are kept limited for now to ensure higher security and avoid the uploading of unusual file types.
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}

@@ -31,7 +31,7 @@ class LostMemeberDetector:
 
         detections = []
         if self.human:
-            # Process frame with tests model (only keep 'person' class)
+            # Process frame with TrackMateTests model (only keep 'person' class)
             human_results = self.yolo_human(img, device=0)
             for result in human_results:
                 for box in result.boxes:
@@ -60,7 +60,7 @@ class LostMemeberDetector:
                         highest_conf = confidence
                         highest_conf_breed = (class_name, confidence, box.xyxy[0])
 
-            # Add the highest-confidence Final breed to detections
+            # Add the highest-confidence TrackMate breed to detections
             if highest_conf_breed:
                 class_name, confidence, box_coords = highest_conf_breed
                 colour = self.generate_rand_col(class_name)

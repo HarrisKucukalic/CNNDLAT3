@@ -12,17 +12,17 @@ __pycache__/
 
 .idea/
 
-Final/YOLOv12n_Training/Dog Breed Dataset.zip
-Final/YOLOv12n_Training/annotations/
-Final/YOLOv12n_Training/data/
-Final/YOLOv12n_Training/detection/
-Final/YOLOv12n_Training/dog_breed_detection/
-Final/YOLOv12n_Training/extracted_files/
-Final/YOLOv12n_Training/slides/
-Final/YOLOv12n_Training/images/
-Final/YOLOv12n_Training/runs/
-Final/YOLOv12n_Training/yolo11n.pt
-Final/YOLOv12n_Training/yolov12n.pt
+TrackMate/YOLOv12n_Training/Dog Breed Dataset.zip
+TrackMate/YOLOv12n_Training/annotations/
+TrackMate/YOLOv12n_Training/data/
+TrackMate/YOLOv12n_Training/detection/
+TrackMate/YOLOv12n_Training/dog_breed_detection/
+TrackMate/YOLOv12n_Training/extracted_files/
+TrackMate/YOLOv12n_Training/slides/
+TrackMate/YOLOv12n_Training/images/
+TrackMate/YOLOv12n_Training/runs/
+TrackMate/YOLOv12n_Training/yolov12n.pt
+TrackMate/slides
 
 
 build/

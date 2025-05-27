@@ -7,10 +7,8 @@ import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
     print("CUDA available:", torch.cuda.is_available())  # sanity check
-    # # 50 Epoch
-    # model = YOLO(r'C:\projects\CNNDLAT3\Final\best.pt')
-    # 35 Epoch
-    model = YOLO(r'C:\projects\CNNDLAT3\Final\dog_breed_detection\yolov12n.pt-v3.0\weights\best.pt')
+    # 200 Epochs - early stopped at 180
+    model = YOLO(r'C:\projects\CNNDLAT3\Final\best.pt')
 
     # Send model to GPU explicitly (optional, usually not needed)
     model.to('cuda' if torch.cuda.is_available() else 'cpu')

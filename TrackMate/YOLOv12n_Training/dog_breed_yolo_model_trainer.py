@@ -35,7 +35,7 @@ if __name__ == "__main__":
 
     # Define dataset paths
 
-    ROOT_DIR = pathlib.Path(r"C:\projects\CNNDLAT3\Final\YOLOv12n_Training")
+    ROOT_DIR = pathlib.Path(r"C:\projects\CNNDLAT3\TrackMate\YOLOv12n_Training")
     ANNOTATIONS_PATH = ROOT_DIR / 'annotations'
     IMAGES_PATH = ROOT_DIR / 'images'
 
