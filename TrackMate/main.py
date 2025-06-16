@@ -26,9 +26,11 @@ PASSWORD = 'secret'
 app = Flask(__name__)
 socketio = SocketIO(app)
 
+
 # This is the authemtication checker, ensures that the password and username is correct
 def check_auth(username, password):
     return username == USERNAME and password == PASSWORD
+
 
 # This function is essentially a wrapper for the check_auth function
 def requires_auth(f):
@@ -41,27 +43,34 @@ def requires_auth(f):
             return authenticate()
         # If authentication successful, continue with the function being authenticated
         return f(*args, **kwargs)
+
     return decorated
+
+
 def authenticate():
     return Response(
         'Login required.', 401,
         {'WWW-Authenticate': 'Basic realm="Login Required"'}
     )
 
+
 # Used to check the file extension and see if it's in our dictionary of accepted file types
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 @socketio.on('signal')
 def handle_signal(data):
     # Relay signaling messages between peers
     emit('signal', data, broadcast=True, include_self=False)
 
+
 # Home page = '/', about would be '/about', etc.
 @app.route('/')
 @requires_auth
 def index():
     return render_template('index.html')
+
 
 @app.route('/lost_table')
 def lost_table():
@@ -96,23 +105,28 @@ def lost_table():
     except FileNotFoundError:
         pass
 
-    return render_template('lost_table.html',  lost_humans=lost_humans, lost_pets=lost_pets)
+    return render_template('lost_table.html', lost_humans=lost_humans, lost_pets=lost_pets)
+
 
 @app.route('/already_lost')
 def already_lost():
     return render_template('already_lost.html')
 
+
 @app.route('/about')
 def about():
     return render_template('about.html')
 
+
 @app.route('/already_lost/human_detection')
 def human():
-    return render_template('human.html',  human=True, face=False)
+    return render_template('human.html', human=True, face=False)
+
 
 @app.route('/already_lost/dog_detection')
 def dog():
     return render_template('dog.html', human=False, face=False)
+
 
 @app.route('/already_lost/upload/human', methods=['GET', 'POST'])
 def human_upload():
@@ -150,6 +164,7 @@ def human_upload():
 
     return render_template('human_upload.html')
 
+
 @app.route('/already_lost/upload/dog', methods=['GET', 'POST'])
 def dog_upload():
     if request.method == 'POST':
@@ -168,6 +183,7 @@ def dog_upload():
 
             return render_template('dog_results.html', image_uri=img_uri)
     return render_template('dog_upload.html')
+
 
 @app.route('/submit_location', methods=['POST'])
 def submit_location():
@@ -200,6 +216,7 @@ def submit_location():
 
     return jsonify({"message": f"{'Lost' if source.startswith('new_') else 'Found'} location uploaded successfully"})
 
+
 @app.route('/new_lost')
 def new_lost():
     return render_template('new_lost.html')
@@ -224,6 +241,7 @@ def new_dog():
 
             return render_template('new_dog_results.html', image_uri=img_uri)
     return render_template('new_dog.html')
+
 
 @app.route('/new_lost/new_human', methods=['GET', 'POST'])
 def new_human():
@@ -270,12 +288,17 @@ def new_human():
 
 # This function is used to help stream data from a camera to the web app.
 # Also from https://www.youtube.com/watch?v=-4v4A550K3w
-def gen(camera):
+
+camera = VideoCamera(human=True, face=False)
+
+
+def gen(cam):
     while True:
-        frame = camera.get_frame()
-        yield(b'--frame\r\n'
-              b'Content-Type: image/jpeg\r\n\r\n' + frame
-              + b'\r\n\r\n')
+        frame = cam.get_frame()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame
+               + b'\r\n\r\n')
+
 
 # This function returns the live camera feed to the web app, using the gen(camera) function from above.
 # Also from https://www.youtube.com/watch?v=-4v4A550K3w
@@ -283,11 +306,11 @@ def gen(camera):
 def video_feed():
     is_human = request.args.get('human', 'false').lower() == 'true'
     is_face = request.args.get('face', 'false').lower() == 'true'
-    return Response(gen(VideoCamera(human=is_human, face=is_face)),
+    camera.set_mode(human=is_human, face=is_face)
+    return Response(gen(camera),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
-
 
 
 if __name__ == '__main__':
     # debug allows you to change code while running and can re-render live
-    app.run(host='0.0.0.0', port='5000', debug=True)
+    app.run(host='0.0.0.0', port='5001', debug=True)

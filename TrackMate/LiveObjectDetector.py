@@ -6,7 +6,7 @@ import torchvision
 
 class LostMemeberDetector:
     # Assigns the models to be used for each type of detection.
-    def __init__(self, human=True, yolo_dog_model='best.pt', yolo_human_model='yolo12n.pt', camera=cv2.VideoCapture(0)):
+    def __init__(self, human=True, yolo_dog_model='best.pt', yolo_human_model='yolo12n.pt', camera=None):
         self.cap = camera
         self.yolo_dog = YOLO(yolo_dog_model)
         self.yolo_human = YOLO(yolo_human_model)
@@ -24,9 +24,8 @@ class LostMemeberDetector:
             )
         return self.class_colours[class_name]
 
-    def process_frame(self):
-        success, img = self.cap.read()
-        if not success:
+    def process_frame(self, img):
+        if img is None:
             return None
 
         detections = []
@@ -110,25 +109,5 @@ class LostMemeberDetector:
 
         return img
 
-    # This code was made for initial local testing of the models, not in a web application. These remain here for when further local testing is required.
-    def run(self):
-        while True:
-            img = self.process_frame()
-            if img is None:
-                break
-
-            cv2.imshow('Detection Live', img)
-
-            if cv2.waitKey(1) & (cv2.getWindowProperty('Detection Live', cv2.WND_PROP_VISIBLE) < 1):
-                break
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-
-        self.cap.release()
-        cv2.destroyAllWindows()
-
-    def return_frame(self):
-        return self.process_frame()
-
-    def __del__(self):
-        self.cap.release()
+    def return_frame(self, frame):
+        return self.process_frame(frame)

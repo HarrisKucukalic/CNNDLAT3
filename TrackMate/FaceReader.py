@@ -5,7 +5,7 @@ import numpy as np
 
 # This class is for human face detection only. Human body is dealt with in the LiveObjectDetector class
 class FaceDetector:
-    def __init__(self, camera=cv2.VideoCapture(0)):
+    def __init__(self, camera=None):
         self.camera = camera
         print("Loading encoded faces ...")
         file = open('EncodeFile.p', 'rb')
@@ -15,16 +15,13 @@ class FaceDetector:
         self.encoded_list_known, self.ids = self.encoded_list_known_w_ids
         # print(ids)
         print("Encoded faces loaded")
-    def process_face(self):
+    def process_face(self, img):
         # Re-loads in the list of known people from the pickle file, as people may have been added between the initialisation of the object
         file = open('EncodeFile.p', 'rb')
         self.encoded_list_known_w_ids = pickle.load(file)
         file.close()
         self.encoded_list_known, self.ids = self.encoded_list_known_w_ids
         # reads cv2 camera footage from the device used. iPhone streams were sent to the device in testing through different mobile apps.
-        success, img = self.camera.read()
-        if not success:
-            return None
         # resizes the images to 1/4 on each dimension, making the image 1/16 of the original for easier processing.
         img_s = cv2.resize(img, (0, 0), fx=0.25, fy=0.25)
         img_s = cv2.cvtColor(img_s, cv2.COLOR_BGR2RGB)
@@ -78,8 +75,5 @@ class FaceDetector:
         # return the processed image.
         return img
 
-    def return_face(self):
-        return self.process_face()
-
-    def __del__(self):
-        self.camera.release()
+    def return_face(self, frame):
+        return self.process_face(frame)
